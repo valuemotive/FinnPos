@@ -45,14 +45,14 @@ for line in stdin:
             ann = ann[ann.find(' ') + 1:]
         else:
             ann = '_'
-        
+
         lemma_dict = {}
         if lemmas != '_':
             lemma_dict = compile_dict(eval(lemmas))
-        
+
         if label in lemma_dict:
             lemma = lemma_dict[label]
             lemma = lemma.lower()
-            lemma = lemma.replace('#','')
+            #lemma = lemma.replace('#','')
 
         print('%s\t%s\t%s\t%s\t%s' % (wf, feats, lemma.replace(HASH,"#"), label, ann))

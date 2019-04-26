@@ -13,7 +13,7 @@ def get_label(string, convert_type):
     if convert_type == 'ftb':
         # Remove everything up to the start of the last lemma.
         string = string[string.rfind('[WORD_ID=') + len('[WORD_ID='):]
-    
+
         # Remove the last lemma.
         label = string[string.find(']') + 1:]
 
@@ -24,7 +24,7 @@ def get_label(string, convert_type):
 
         sub_labels = filter(lambda x: x.find("STYLE=") == -1, sub_labels)
         sub_labels = filter(lambda x: x.find("DRV=") == -1, sub_labels)
-        
+
         label = '|'.join(sub_labels)
 
         return label
@@ -33,7 +33,7 @@ def get_label(string, convert_type):
         return string[string.find('\t'):]
 
 def get_lemmas(analyses, convert_type):
-    return [(get_label(a, convert_type), get_lemma(a, convert_type)) 
+    return [(get_label(a, convert_type), get_lemma(a, convert_type))
             for a in analyses]
 
 def get_labels(analyses, convert_type):
@@ -54,8 +54,8 @@ def convert(pname, ifile, convert_type):
 
         if line == '' and wf != '':
 
-            if convert_type == 'ftb' and len(analyses) > 0:
-                analyses = filter_ftb_analyses(analyses)
+            #if convert_type == 'ftb' and len(analyses) > 0:
+            #    analyses = filter_ftb_analyses(analyses)
 
             lemmas = get_lemmas(analyses, convert_type)
             lemmas = list(set(lemmas))
@@ -70,20 +70,20 @@ def convert(pname, ifile, convert_type):
                 label_feats = map(lambda x: "OMORFI_FEAT:" + x, labels)
                 feats = ' '.join(label_feats)
 
-            label_str = '_' 
+            label_str = '_'
 
             if labels != []:
                 ' '.join(labels)
-                
+
             print('%s\t%s\t%s\t%s\t%s' % (wf, feats, '_', label_str, lemma_str))
 
             wf, analyses = '', []
-            
+
         elif line == '':
             stdout.flush()
             continue
 
-        elif (convert_type == 'ftb' and 
+        elif (convert_type == 'ftb' and
               line == 'OMORFI_VERSION_≥_14_©_GNU_GPL_V3'):
             print('')
             entry = ''
@@ -117,9 +117,9 @@ if __name__=='__main__':
     elif len(argv) != 1:
         stderr.write('USE: cat indata | %s (ftb|tdt) > outdata\n' % argv[0])
         exit(1)
-        
+
     if not convert_type in ['ftb','tdt']:
-        stderr.write('Unknown conversion type %s. Should be ftb or tdt.' % 
+        stderr.write('Unknown conversion type %s. Should be ftb or tdt.' %
                      convert_type)
         exit(1)
 
